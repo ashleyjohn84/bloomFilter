@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
+[assembly :InternalsVisibleTo("BloomFilterTest")]
+
 namespace Ashley.BloomFilter
 {
 	public class BloomFilter : BloomFilterBase
 	{
-		private readonly BitArray bloomArray;
+		internal readonly BitArray bloomArray;
 		private readonly IBloomHash IbloomHash;
 		public BloomFilter(int maxElements, double falsePositiveProbability) : base(maxElements, falsePositiveProbability)
 		{
@@ -27,6 +30,10 @@ namespace Ashley.BloomFilter
 
 		public override bool Contains(string item)
 		{
+			if (String.IsNullOrWhiteSpace(item) || String.IsNullOrEmpty(item))
+			{
+				throw new ArgumentNullException("item", "Item to be checked cannot be empty or null or whitespace");
+			}
 			foreach (int index in IbloomHash.GetIndices(item))
 			{
 				if (!bloomArray[index])

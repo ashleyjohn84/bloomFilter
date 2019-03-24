@@ -1,5 +1,10 @@
 ﻿
-/* "https://gist.github.com/automatonic/3725443.js"  */
+/* "
+ * Implementation of Murmurhash  took from the below source
+ * https://gist.github.com/automatonic/3725443.js"  
+ 
+  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
