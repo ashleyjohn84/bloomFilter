@@ -14,55 +14,82 @@ namespace BloomFilterClient
 			int maxCount;
 			double probabilityRatio;
 			bool done = false;
-			Console.WriteLine("Enter the maximum count of Elements for the BloomFilter ");
-			string maxElementInput = Console.ReadLine();
-			if (int.TryParse(maxElementInput, out maxCount))
+			try
 			{
-				Console.WriteLine("Enter the false positive probability you are looking for ");
-				string probabilityRatioInput = Console.ReadLine();
-				if (double.TryParse(probabilityRatioInput, out probabilityRatio) && probabilityRatio > 0.0d && probabilityRatio < 1.00d)
+				while (!done)
 				{
-					BloomFilter bloomFilter = new BloomFilter(maxCount, probabilityRatio);
-					PrintFilterCreatedMessage(maxCount, bloomFilter.BloomArraySize, probabilityRatio, bloomFilter.CountOfhashFunctions);
-					while (!done)
+					Console.WriteLine("Enter the maximum count of Elements for the BloomFilter ");
+					string maxElementInput = Console.ReadLine();
+					if (int.TryParse(maxElementInput, out maxCount) && maxCount > 0)
 					{
-						string input = Console.ReadLine();
-						switch (input[0])
+						Console.WriteLine("Enter the false positive probability you are looking for ");
+						string probabilityRatioInput = Console.ReadLine();
+						if (double.TryParse(probabilityRatioInput, out probabilityRatio) && probabilityRatio > 0.0d && probabilityRatio < 1.00d)
 						{
-							case 'i':
-								Console.WriteLine("Add an Item");
-								bloomFilter.Insert(Console.ReadLine());
-								PrintAddedMessage();
-								break;
-							case 'c':
-								Console.WriteLine("Serach for an Item");
-								bool isPresent = bloomFilter.Contains(Console.ReadLine());
-								Console.WriteLine($"Item is {(isPresent ? "" : "not")} present");
-								break;
-							case 'q':
-								done = true;
-								break;
-							default:
-								done = true;
-								break;
+							BloomFilter bloomFilter = new BloomFilter(maxCount, probabilityRatio);
+							PrintFilterCreatedMessage(maxCount, bloomFilter.BloomArraySize, probabilityRatio, bloomFilter.CountOfhashFunctions);
+							while (!done)
+							{
+								var input = Console.ReadKey();
+								Console.WriteLine();
+								switch (input.KeyChar)
+								{
+									case 'i':
+										Console.WriteLine("Add an Item");
+										bloomFilter.Insert(Console.ReadLine());
+										PrintAddedMessage(bloomFilter.Count, bloomFilter.GetUtilizationratio());
+										break;
+									case 'c':
+										Console.WriteLine("Search for an Item");
+										bool isPresent = bloomFilter.Contains(Console.ReadLine());
+										PrintSeachResultMessage(isPresent);
+										break;
+									default:
+										done = true;
+										break;
+								}
+							}
+						}
+						else
+						{
+							Console.WriteLine("Please provide a valid ratio greater than 0 but less than 1");
 						}
 					}
+					else
+					{
+						Console.WriteLine("Please provide a valid integer greater than 0 ");
+					}
 				}
-				else
-				{
-					Console.WriteLine("Please provide a valid ratio greater than 0 but less than 1");
-				}
+				Console.ReadKey();
 			}
-			else
+			catch(Exception exp)
 			{
-				Console.WriteLine("Please provide a valid integer greater than 0 ");
+				Console.WriteLine(exp.Message);
 			}
 		}
 
-		static void PrintAddedMessage()
+		static void PrintAddedMessage(int count,decimal percentage)
 		{
-			Console.ForegroundColor = ConsoleColor.Green;
-			Console.WriteLine("Item Added. Please enter the next Command eg.. i or c or q");
+			Console.ForegroundColor = ConsoleColor.Cyan;
+			string percentageFormatted = string.Format("{0:0.00}% ", percentage);
+			Console.WriteLine($"Item Added. Item Count = {count} Utilization Percentage : {percentageFormatted} Please enter the next Command eg.. i or c or any other key to quit");
+			Console.ResetColor();
+		}
+
+		static void PrintSeachResultMessage(bool isPresent)
+		{
+			if(isPresent)
+			{
+				Console.ForegroundColor = ConsoleColor.Cyan;
+			}
+			else
+			{
+				Console.ForegroundColor = ConsoleColor.Red;
+			}
+			Console.WriteLine($"Item is {(isPresent ? "" : "not")} present");
+			Console.ResetColor();
+			Console.ForegroundColor = ConsoleColor.Cyan;
+			Console.WriteLine("Please enter the next Command eg.. i or c or any other key to quit");
 			Console.ResetColor();
 		}
 
@@ -71,10 +98,10 @@ namespace BloomFilterClient
 			Console.ForegroundColor = ConsoleColor.Green;
 			Console.WriteLine($"BloomFilter Created . " +
 				$"MaxElements : {maxCount}  " +
-				$"ArraySize: {arraySize}  " +
+				$"ArraySize: {arraySize} bits " +
 				$"FalsePositive probability: {probabilityRatio}  " +
 				$"Count of hash functions: {hashFunctions}");
-			Console.WriteLine("Enter i to Add Item , c to Search q to quit");
+			Console.WriteLine("Enter i to Add Item , c to Search any other key  to quit");
 			Console.ResetColor();
 		}
 

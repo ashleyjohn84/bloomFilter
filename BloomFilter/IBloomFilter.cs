@@ -8,7 +8,6 @@ namespace Ashley.BloomFilter
 {
 	public interface IBloomFilter
 	{
-		int CountOfhashFunctions { get; }
 		void Insert(string item);
 		bool Contains(string item);
 	}

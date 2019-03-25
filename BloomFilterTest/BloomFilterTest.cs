@@ -23,6 +23,16 @@ namespace BloomFilterTest
 		}
 
 		[TestMethod]
+		public void BloomFilter_InsertFunction_Should_Update_Count_By_One()
+		{
+			Mock<IBloomHash> bloomhashMock = new Mock<IBloomHash>();
+			BloomFilter filter = new BloomFilter(100, 0.1d, bloomhashMock.Object);
+			bloomhashMock.Setup(mock => mock.GetIndices(It.IsAny<string>())).Returns(() => Enumerable.Range(1, filter.CountOfhashFunctions));
+			filter.Insert("Test");
+			Assert.AreEqual(1, filter.Count);
+		}
+
+		[TestMethod]
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void ShouldThrow__ArgumentOutOfRangeException_If_MaxElements_EqualToZero()
 		{

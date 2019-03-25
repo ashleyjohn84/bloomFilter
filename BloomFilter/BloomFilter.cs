@@ -15,6 +15,8 @@ namespace Ashley.BloomFilter
 	{
 		internal readonly BitArray bloomArray;
 		private readonly IBloomHash IbloomHash;
+
+		public int Count { get; private set; }
 		public BloomFilter(int maxElements, double falsePositiveProbability) : base(maxElements, falsePositiveProbability)
 		{
 			bloomArray = new BitArray(BloomArraySize, false);
@@ -53,8 +55,16 @@ namespace Ashley.BloomFilter
 			{
 				bloomArray[index] = true;
 			}
+			Count++;
 		}
 
+		public decimal GetUtilizationratio()
+		{
+			decimal result = 0;
+			int setBits = bloomArray.Cast<bool>().Count(item => item);
+			result = setBits * 100 / BloomArraySize;
+			return result;
+		}
 		
 	}
 }
