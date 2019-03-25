@@ -30,6 +30,10 @@ namespace Ashley.BloomFilter
 		{
 			double arraySize = maxElements * Math.Log(falsePositiveProbability) / Math.Pow(Math.Log(2), 2);
 			arraySize = Math.Round(Math.Abs(arraySize));
+			if( arraySize > Int32.MaxValue)
+			{
+				throw new Exception($"Cannot support creating BloomFilter with maximumElements {maxElements} and false positive Probability {falsePositiveProbability}");
+			}
 			return (int)arraySize;
 		}
 
