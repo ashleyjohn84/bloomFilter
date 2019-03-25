@@ -26,8 +26,9 @@ namespace BloomFilterClient
 					PrintFilterCreatedMessage(maxCount, bloomFilter.BloomArraySize, probabilityRatio, bloomFilter.CountOfhashFunctions);
 					while (!done)
 					{
-						string input = Console.ReadLine();
-						switch (input[0])
+						var input = Console.ReadKey();
+						Console.WriteLine();
+						switch (input.KeyChar)
 						{
 							case 'i':
 								Console.WriteLine("Add an Item");
@@ -35,9 +36,9 @@ namespace BloomFilterClient
 								PrintAddedMessage();
 								break;
 							case 'c':
-								Console.WriteLine("Serach for an Item");
+								Console.WriteLine("Search for an Item");
 								bool isPresent = bloomFilter.Contains(Console.ReadLine());
-								Console.WriteLine($"Item is {(isPresent ? "" : "not")} present");
+								PrintSeachResultMessage(isPresent);
 								break;
 							case 'q':
 								done = true;
@@ -57,12 +58,30 @@ namespace BloomFilterClient
 			{
 				Console.WriteLine("Please provide a valid integer greater than 0 ");
 			}
+			Console.ReadKey();
 		}
 
 		static void PrintAddedMessage()
 		{
-			Console.ForegroundColor = ConsoleColor.Green;
+			Console.ForegroundColor = ConsoleColor.Cyan;
 			Console.WriteLine("Item Added. Please enter the next Command eg.. i or c or q");
+			Console.ResetColor();
+		}
+
+		static void PrintSeachResultMessage(bool isPresent)
+		{
+			if(isPresent)
+			{
+				Console.ForegroundColor = ConsoleColor.Cyan;
+			}
+			else
+			{
+				Console.ForegroundColor = ConsoleColor.Red;
+			}
+			Console.WriteLine($"Item is {(isPresent ? "" : "not")} present");
+			Console.ResetColor();
+			Console.ForegroundColor = ConsoleColor.Cyan;
+			Console.WriteLine("Please enter the next Command eg.. i or c or q");
 			Console.ResetColor();
 		}
 
