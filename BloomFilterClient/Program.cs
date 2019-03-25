@@ -57,14 +57,17 @@ namespace BloomFilterClient
 					}
 					else
 					{
-						Console.WriteLine("Please provide a valid integer greater than 0 ");
+						Console.WriteLine("Please provide a valid integer greater than 0 and less than Int.Max ");
 					}
 				}
-				Console.ReadKey();
 			}
 			catch(Exception exp)
 			{
 				Console.WriteLine(exp.Message);
+			}
+			finally
+			{
+				Console.ReadKey();
 			}
 		}
 
