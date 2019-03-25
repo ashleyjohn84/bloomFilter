@@ -58,6 +58,13 @@ namespace Ashley.BloomFilter
 			Count++;
 		}
 
+		public decimal GetUtilizationratio()
+		{
+			decimal result = 0;
+			int setBits = bloomArray.Cast<bool>().Count(item => item);
+			result = setBits * 100 / BloomArraySize;
+			return result;
+		}
 		
 	}
 }
