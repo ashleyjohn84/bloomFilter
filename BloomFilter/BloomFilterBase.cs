@@ -9,7 +9,7 @@ namespace Ashley.BloomFilter
 {
 	public abstract class BloomFilterBase : IBloomFilter
 	{
-		public BloomFilterBase(int maxElements,double falsePositiveProbability)
+		protected BloomFilterBase(int maxElements,double falsePositiveProbability)
 		{
 			if(maxElements <= 0)
 			{
@@ -19,8 +19,11 @@ namespace Ashley.BloomFilter
 			{
 				throw new ArgumentOutOfRangeException("falsePositiveProbability", "False positive probability should be between 1 and 0");
 			}
+			MaximumElements = maxElements;
+			FalsePositiveProbability = falsePositiveProbability;
 			BloomArraySize = CalculateArraySize(maxElements, falsePositiveProbability);
 			CountOfhashFunctions = GetCountofHashFunctions(BloomArraySize, maxElements);
+
 		}
 
 		private int CalculateArraySize(int maxElements, double falsePositiveProbability)
@@ -39,6 +42,10 @@ namespace Ashley.BloomFilter
 		public int CountOfhashFunctions { get; }
 
 		public int BloomArraySize { get; }
+
+		public int MaximumElements { get; }
+
+		public double FalsePositiveProbability { get; }
 
 		public abstract bool Contains(string item);
 
